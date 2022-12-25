@@ -7,8 +7,8 @@ class Card(SQLModel, table=True):
     frontside: str
     backside: str
     rating: int = Field(default=10)
-    deck_id: Optional[int] = Field(foreign_key="deck.id")
-    deck_name: str = Field(foreign_key="deck.name")
+    deck_id: int = Field(foreign_key="deck.id")
+    # deck_name: str = Field(foreign_key="deck.name")
     deck: Optional["Deck"] = Relationship(back_populates="cards")
 
 class Deck(SQLModel, table=True):

@@ -1,21 +1,18 @@
 import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Decks from "./components/Decks";
 import OneDeck from "./components/OneDeck";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Context } from "./components/Context";
-import { useState } from "react";
+import NotFound from "./components/NotFound";
 
 function App() {
-  const [context, setContext] = useState("")
   return (
-    <Context.Provider value={[context, setContext]}
     <Router>
       <Routes>
-        <Route path="/" element={<Decks />} />
-        <Route path={`/decks/${id}`} element={<OneDeck />} />
+        <Route path="decks/" element={<Decks />} />
+        <Route path="decks/:id" element={<OneDeck />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
-    </Context.Provider >
   );
 }
 
