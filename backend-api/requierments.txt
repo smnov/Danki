@@ -1,0 +1,7 @@
+passlib
+uvicorn
+sqlmodel
+fastapi
+python-jose
+pyjwt
+alembic

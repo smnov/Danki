@@ -35,3 +35,39 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.navbar {
+  background-color: rgb(233, 155, 10);
+  overflow: hidden;
+}
+
+.nav {
+  display: flex;
+  float: left;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.nav:hover {
+  background-color: rgb(211, 120, 0);
+  border-radius: 10px;
+}
+
+.nav:active {
+  color: #61dafb;
+}
+
+.navbar p:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.navbar p:active {
+  background-color: #4caf50;
+  color: white;
+}
+
+.nav {
+  margin: 15px;
+}

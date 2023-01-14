@@ -1,0 +1,39 @@
+.header {
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.card-form {
+  text-align: center;
+}
+
+.cards {
+  text-align: center;
+}
+
+.learn {
+  text-align: center;
+  margin: 20px;
+}
+
+.learn-btn {
+  margin: 5px;
+}
+
+.data {
+  font-size: 15px;
+}
+
+.data-top {
+  margin-top: 15px;
+}
+
+.add-btn {
+  margin-top: 10px;
+}
+
+.new-deck-input {
+  padding: 7px;
+  margin: 5px;
+}

@@ -1,0 +1,9 @@
+.core {
+  display: flex;
+  justify-content: center;
+}
+
+.btn {
+  text-align: center;
+  justify-content: center;
+}

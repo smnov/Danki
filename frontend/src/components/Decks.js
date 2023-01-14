@@ -2,11 +2,14 @@ import React, { useEffect, useState, Fragment } from "react";
 import Card from "./Card";
 import { Link } from "react-router-dom";
 import "./Decks.css";
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import Paper from "@mui/material/Paper"
 
 export default function Decks() {
   const BASE_URL = "http://localhost:8000";
   const [decks, setDecks] = useState([]);
   const [newDeck, setNewDeck] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetch(BASE_URL + "/decks")
@@ -33,36 +36,59 @@ export default function Decks() {
           return response.json();
         }
       })
-      .then((data) => {
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
         setNewDeck("");
+        window.location.reload(false);
       });
   };
 
   return (
     <div>
-      <Fragment>
-        <h2 className="header">Decks</h2>
-        <br />
-        <ul className="deck">
-          {decks?.map((deck) => {
-            return (
-              <li className="link" key={deck.id}>
-                <Link to={`decks/${deck.id}`}>{deck.name}</Link>
-              </li>
-            );
-          })}
-        </ul>
-      </Fragment>
-      <form>
+      <TableContainer component={Paper} className="table">
+        <Table sx={{ minWidth: 650}} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Deck</TableCell>
+              <TableCell align="right">Created</TableCell>
+              <TableCell align="right">New</TableCell>
+              <TableCell align="right">In process</TableCell>
+              <TableCell align="right">Repeated</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {decks?.map((deck) => (
+              <TableRow
+              key={deck.id}
+              sx={{ '&:last-child td, &:last-child th': { border: 0} }}
+            >
+              <TableCell component="th" scope="row" className="deck-link">
+                <Link to={`/decks/${deck.id}`}>{deck.name}</Link>
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {(deck?.created_at).slice(0,10)}
+              </TableCell>
+              <TableCell component="th" scope="row">
+                {deck.cards}
+              </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <form className="add-deck">
         <input
+          className="deck-input"
           type="text"
-          placeholder="title"
+          placeholder="Title"
           value={newDeck}
           onChange={(e) => setNewDeck(e.target.value)}
         />
-        <button type="submit" onClick={createNewDeck}>
+        <Button type="submit" variant="outlined" onClick={createNewDeck}>
           Add deck
-        </button>
+        </Button>
       </form>
     </div>
   );
