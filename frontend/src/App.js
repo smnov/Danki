@@ -5,17 +5,28 @@ import OneDeck from "./components/OneDeck";
 import LearnDeck from "./components/LearnDeck";
 import ListOfDeck from "./components/ListOfDeck"
 import NotFound from "./components/NotFound";
+import jwt_decode from "jwt-decode";
 import Login from "./components/Login"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Modal, TextField } from "@mui/material";
 import Card from "./components/Card";
 import Register from "./components/Register";
+import { useCookies } from "react-cookie";
 
 function App() {
   const BASE_URL = "http://localhost:8000";
-  const [isLoading, setIsLoading] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [openUpload, setOpenUpload] = useState(false);
   const [newDeck, setNewDeck] = useState("");
+  const [cookies, setCookies, removeCookies] = useCookies(["token"])
+  const [username, setUsername] = useState("")
+
+  useEffect(() => {
+    if (cookies.token) {
+      const decoded = jwt_decode(cookies.token)
+      setUsername(decoded.sub)
+    }
+  })
 
   const upload = () => {
     setOpenUpload(true);
@@ -49,6 +60,11 @@ function App() {
       });
   };
 
+  const logout = () => {
+    removeCookies("token", {path:"/"})
+    removeCookies("csrftoken", {path:"/"})
+  }
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -66,17 +82,40 @@ function App() {
     <Router>
       <nav className="navbar">
         <Link to="/" className="nav">
-          Decks
-        </Link>
-        <button onClick={upload} className="nav">
-          Add deck
-        </button>
-        <Link to="/login" className="nav">
-          Login
-        </Link>
+          DECKS
+        </Link>  
+        {cookies.token == null ? (
+          <>
+          <Link className="nav" onClick={() => setLoginOpen(true)}>
+            LOGIN
+          </Link>
         <Link to="/register" className="nav">
-          Register
+          REGISTER
         </Link>
+        </>
+        ) : (
+          <>
+        <Link onClick={upload} className="nav">
+          ADD DECK
+        </Link>
+          <Link onClick={logout} className="nav">
+            LOGOUT
+          </Link>
+          <Link className="nav">
+            {username}
+          </Link>
+          </>
+        )
+        }
+        <Modal open={loginOpen} onClose={() => setLoginOpen(false)}>
+          <Box sx={style}>
+            <Login 
+            setLoginOpen={setLoginOpen} 
+            setCookies={setCookies}
+            cookies={cookies}
+            />
+          </Box>
+        </Modal>
         <Modal open={openUpload} onClose={() => setOpenUpload(false)}>
           <Box sx={style}>
             <div>
@@ -88,7 +127,6 @@ function App() {
                 value={newDeck}
                 onChange={(e) => setNewDeck(e.target.value)}
               />
-
               <Button
                 onClick={createNewDeck}
                 variant="contained"
@@ -107,7 +145,6 @@ function App() {
         <Route path="decks/:id/learn" element={<LearnDeck />} />
         <Route path="decks/:id/list" element={<ListOfDeck />} />
         <Route path="card/:id" element={<Card />} />
-        <Route path="login/" element={<Login />} />
         <Route path="register/" element={<Register />} />
         <Route path="*" element={<NotFound />} />
 

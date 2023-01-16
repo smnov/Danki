@@ -1,0 +1,4 @@
+material-ui
+react-cookies
+jwt-decode
+react-router
