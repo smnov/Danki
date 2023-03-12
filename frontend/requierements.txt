@@ -1,0 +1,8 @@
+react-bootstrap
+bootstrap
+react-router-dom
+react-router-bootstrap
+react-redux
+axios
+@reduxjs/toolkit
+redux-thunk

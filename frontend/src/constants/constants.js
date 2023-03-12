@@ -1,0 +1,21 @@
+export const localhost = "http://localhost:8000/";
+
+export const DECK_LIST_REQUEST = "DECK_LIST_REQUEST";
+export const DECK_LIST_SUCCESS = "DECK_LIST_SUCCESS";
+export const DECK_LIST_FAIL = "DECK_LIST_FAIL";
+
+export const DECK_REQUEST = "DECK_REQUEST";
+export const DECK_SUCCESS = "DECK_SUCCESS";
+export const DECK_FAIL = "DECK_FAIL";
+
+export const DECK_DELETE_REQUEST = "DECK_DELETE_REQUEST";
+export const DECK_DELETE_SUCCESS = "DECK_DELETE_SUCCESS";
+export const DECK_DELETE_FAIL = "DECK_DELETE_FAIL";
+
+export const CARD_OF_DECK_REQUEST = "CARD_OF_DECK_REQUEST";
+export const CARD_OF_DECK_SUCCESS = "CARD_OF_DECK_SUCCESS";
+export const CARD_OF_DECK_FAIL = "CARD_OF_DECK_FAIL";
+
+export const CARD_CREATE_REQUEST = "CARD_CREATE_REQUEST";
+export const CARD_CREATE_SUCCESS = "CARD_CREATE_SUCCESS";
+export const CARD_CREATE_FAIL = "CARD_CREATE_FAIL";
