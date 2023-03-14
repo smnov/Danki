@@ -1,28 +1,43 @@
 import { Form } from "react-bootstrap";
 import { useState } from "react";
+import { useDispatch } from "react-redux"
 import { Button } from "react-bootstrap";
+import { redirect, useNavigate } from "react-router-dom"
+import { deckCreateAction } from "../actions/deckActions";
 
 export default function AddDeckScreen() {
   const [name, setName] = useState("");
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const submitHandler = (e) => {
+    e?.preventDefault();
+    let deck = {
+      created_at: Date.now(),
+      datetime: Date.now(),
+      name: name, 
+    }
+    dispatch(deckCreateAction(deck))
+    navigate("/")
+  }
   return (
-    <div>
+    <div className="d-flex justify-content-center mt-4">
       <Form>
         <Form.Group
+          className="text-align-center border border-dark p-3"
           controlId="frontside"
-          className="d-flex justify-content-center"
         >
-          <Form.Label className="text-align-center">Frontside</Form.Label>
+          <Form.Label>Frontside</Form.Label>
           <Form.Control
-            className="m-3 p-2 w-25"
             type="text"
             placeholder="name of new deck"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-        </Form.Group>
-        <Button variant="warning" type="submit" className="m-3 rounded">
+        <Button variant="warning" type="submit" className="m-3 rounded" onClick={submitHandler}>
           Add
         </Button>
+        </Form.Group>
       </Form>
     </div>
   );

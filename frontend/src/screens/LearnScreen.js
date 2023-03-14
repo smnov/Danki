@@ -1,27 +1,28 @@
-import { useParams } from "react-router-dom";
-import { Button } from "react-bootstrap"
-import Card from "react-bootstrap/Card"
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import ReactCardFlip from "react-card-flip"
-import { useEffect, useState } from "react";
-import { cardOfDeck, oneCardAction } from "../actions/cardActions";
-import Loader from "../components/Loader";
-import Message from "../components/Message";
+import { useParams } from "react-router-dom";
+import { cardLearnAction } from '../actions/learningActions'
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import { Button } from 'react-bootstrap';
 
-export default function CardScreen() {
-  const { id, card_id } = useParams()
-  const [flip, setFlip] = useState(false)
-  const oneCard = useSelector((state) => state.oneCard)
-  const {loading, error, card } = oneCard
+function LearnScreen() {
   const dispatch = useDispatch()
-
+  const [flip, setFlip] = useState(false)
+  const { id } = useParams()
+  const cardLearn = useSelector(state => state.cardLearn)
+  const {loading, error, card} = cardLearn
   useEffect(() => {
-    dispatch(oneCardAction(card_id))
+    dispatch(cardLearnAction(id))
   }, [dispatch])
   return (
+    <div>
+        <h1 className='d-flex justify-content-center mt-4 mx-auto'>Learn</h1>
+        {console.log(card)}
     <div className="d-flex justify-content-center border border-dark w-25 mt-5 mx-auto">
       {loading ? <Loader /> : error ? <Message>{error}</Message> : 
-
+<div>
   <ReactCardFlip isFlipped={flip} 
             flipDirection="vertical">
             <div style={{
@@ -54,18 +55,20 @@ export default function CardScreen() {
                 padding: '20px'
             }}>
               {card?.backside}
+              <div className='mt-5 d-flex justify-content-center'>
+          <Button variant="danger" className='m-2 rounded'>Again</Button>
+          <Button variant="warning" className='m-2 rounded'>Difficult</Button>
+          <Button className='m-2 rounded'>OK</Button>
+          <Button variant="success" className='m-2 rounded'>Easy</Button>
+          </div>
                 <br />
-                <Button style={{
-                    width: '150px',
-                    padding: '10px',
-                    fontSize: '20px',
-                    fontWeight: 'bold',
-                    borderRadius: '5px'
-                }} onClick={() => setFlip(!flip)}>
-                    Flip</Button>
             </div>
         </ReactCardFlip> 
+        </div>
 }
         </div>             
-  );
+        </div>
+  )
 }
+
+export default LearnScreen

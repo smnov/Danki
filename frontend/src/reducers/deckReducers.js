@@ -1,4 +1,7 @@
 import {
+  DECK_CREATE_FAIL,
+  DECK_CREATE_REQUEST,
+  DECK_CREATE_SUCCESS,
   DECK_DELETE_FAIL,
   DECK_DELETE_REQUEST,
   DECK_DELETE_SUCCESS,
@@ -48,3 +51,16 @@ export const deckDeleteReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const deckCreateReducer = (state = {}, action) => {
+  switch(action.type) {
+    case DECK_CREATE_REQUEST:
+      return {loading: true, deck: action.payload}
+    case DECK_CREATE_SUCCESS:
+      return {loading: false, success: true}
+    case DECK_CREATE_FAIL:
+      return {loading: false, error: action.payload}
+    default:
+      return state
+  }
+}

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Modal, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams, redirect } from "react-router-dom";
-import { cardOfDeck, createCardAction } from "../actions/cardActions";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { cardsOfDeckAction, createCardAction } from "../actions/cardActions";
 import { deckDetails, deckDeleteAction } from "../actions/deckActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
@@ -12,15 +12,17 @@ export default function DeckScreen() {
   const [addModal, setAddModal] = useState(false);
   const [frontside, setFrontside] = useState("");
   const [backside, setBackside] = useState("");
+  const [showCards, setShowCards] = useState(false)
   const oneDeck = useSelector((state) => state.oneDeck);
   const cardsOfDeck = useSelector((state) => state.cardsOfDeck);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { loading, error, deck } = oneDeck;
   const { cardsLoading, cardsError, cards } = cardsOfDeck;
 
   useEffect(() => {
     dispatch(deckDetails(id));
-    dispatch(cardOfDeck(id));
+    dispatch(cardsOfDeckAction(id));
   }, [dispatch]);
 
   const handleShowModal = () => setAddModal(true);
@@ -47,18 +49,25 @@ export default function DeckScreen() {
   const deckDeleteHandler = () => {
     if (window.confirm("Do you realy want to delete this deck?")) {
       dispatch(deckDeleteAction(id));
-      return redirect("/");
+      navigate("/");
     } else {
-      console.log("cancel");
     }
   };
+  const showCardsHandler = () => {
+    showCards ?
+    setShowCards(false)
+    :
+    setShowCards(true)
+  }
   return (
     <div>
-      <div className="d-flex justify-content-center my-3">
-        <h1>{deck?.name}</h1>
-        <Button className=" d-flex justify-content-center rounded m-2">
+      <div className="d-flex flex-column my-3">
+        <div className="mx-auto">
+        <Link to="learn">
+        <Button className="m-2 rounded">
           Learn
         </Button>
+        </Link>
         <Button
           variant="warning"
           className="m-2 rounded"
@@ -74,8 +83,14 @@ export default function DeckScreen() {
           Delete
         </Button>
       </div>
+        <div className="mx-auto">
+        <h1>{deck?.name}</h1>
+        </div>
+      <div className="d-flex justify-content-center mt-4">
+      <Button onClick={showCardsHandler} variant="info" className="mb-3 rounded">{showCards ? "Hide Cards" : "Show cards"}</Button>
+      </div>
       {cardsLoading && <Loader />}
-
+      {showCards &&
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>
@@ -86,12 +101,13 @@ export default function DeckScreen() {
           </tr>
         </thead>
         <tbody>
-          {cards?.map((card) => {
+          {cards ? 
+          cards.map((card) => {
             return (
               <tr key={card.id}>
                 <td>{card.id}</td>
                 <td>
-                  <Link to={`deck/${deck.id}`}>{card.frontside}</Link>
+                  <Link to={`cards/${card.id}`}>{card.frontside}</Link>
                 </td>
                 <td>{card.created_at.slice(0, 10)}</td>
                 <td>
@@ -104,9 +120,10 @@ export default function DeckScreen() {
                 </td>
               </tr>
             );
-          })}
+          }) : <h1>No cards...</h1>}
         </tbody>
       </Table>
+  }
       <Modal show={addModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Add Card</Modal.Title>
@@ -151,6 +168,7 @@ export default function DeckScreen() {
           </Button>
         </Modal.Footer>
       </Modal>
+    </div>
     </div>
   );
 }

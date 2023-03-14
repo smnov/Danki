@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+  DECK_CREATE_FAIL,
+  DECK_CREATE_REQUEST,
+  DECK_CREATE_SUCCESS,
   DECK_DELETE_REQUEST,
   DECK_DELETE_SUCCESS,
   DECK_FAIL,
@@ -67,3 +70,20 @@ export const deckDeleteAction = (id) => async (dispatch) => {
     });
   }
 };
+
+export const deckCreateAction = (deck) => async (dispatch) => {
+  try {
+    dispatch({type: DECK_CREATE_REQUEST})
+    const { data } = await axios.post(localhost + 'decks', deck)
+    dispatch({type: DECK_CREATE_SUCCESS,
+    payload: data,})
+  } catch (error) {
+    dispatch({
+      type: DECK_CREATE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.detail,
+    });
+  }
+}

@@ -1,5 +1,6 @@
 react-bootstrap
 bootstrap
+react-card-flip
 react-router-dom
 react-router-bootstrap
 react-redux
