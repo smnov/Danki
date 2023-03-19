@@ -2,7 +2,10 @@ passlib
 uvicorn
 sqlmodel
 fastapi
+fastapi-utils
 python-jose
 pyjwt
 alembic
 pydantic[email]
+rocketry
+asyncio

@@ -8,6 +8,9 @@ import {
   CARD_GET_ONE_REQUEST,
   CARD_GET_ONE_SUCCESS,
   CARD_GET_ONE_FAIL,
+  CARD_STATUS_REQUEST,
+  CARD_STATUS_SUCCESS,
+  CARD_STATUS_FAIL,
 } from "../constants/constants";
 
 export const cardsOfDeckReducer = (state = { cards: [] }, action) => {
@@ -48,3 +51,16 @@ export const createCartReducer = (state = {}, action) => {
       return state;
   }
 };
+
+export const cardStatusReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CARD_STATUS_REQUEST:
+    return {loading: true, status: []}
+    case CARD_STATUS_SUCCESS:
+      return {loading: false, status: action.payload}
+    case CARD_STATUS_FAIL:
+      return {loading: false, error: action.payload}
+    default:
+      return state
+  }
+}

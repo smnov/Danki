@@ -18,7 +18,15 @@ export default function CardScreen() {
   useEffect(() => {
     dispatch(oneCardAction(card_id))
   }, [dispatch])
+
+  const deleteHandler = (e) => {
+    e?.preventDefault();
+
+  }
+
+
   return (
+    <div>
     <div className="d-flex justify-content-center border border-dark w-25 mt-5 mx-auto">
       {loading ? <Loader /> : error ? <Message>{error}</Message> : 
 
@@ -67,5 +75,7 @@ export default function CardScreen() {
         </ReactCardFlip> 
 }
         </div>             
+        <Button variant="danger" className="d-flex rounded mx-auto mt-3" onClick={deleteHandler}>Delete</Button>
+        </div>
   );
 }

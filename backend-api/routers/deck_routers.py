@@ -1,10 +1,11 @@
 from typing import List
-import datetime
 from models.models import Card, Deck, CardPatch, DeckDelete
 from fastapi import APIRouter, Depends, status
 from fastapi.exceptions import HTTPException
-from sqlmodel import Session, select, col
+from sqlmodel import Session, select
 from db.database import engine
+import datetime
+from config import interval
 
 
 router = APIRouter()
@@ -19,24 +20,6 @@ async def get_cards_of_deck(id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     return res
 
-@router.get("/decks/{id}/cards/not_done", response_model=List[Card], tags=["cards"])
-async def get_not_done_cards(id: int):
-    "Change status of cards"
-    cards_found = select(Card).where(Card.deck_id == id)
-    res = session.exec(cards_found).all()
-    if not res:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-    for i in res:
-        data = datetime.datetime.now() - i.created_at
-        print(data)
-        print(data.seconds)
-        if i.is_done == True:
-            i.is_done = False
-        if i.status == "New":
-             if data.days >= 1:
-                i.status = "learning"
-        session.commit()
-    return res
 
 @router.get("/decks/{id}", response_model=Deck, tags=["decks"])
 async def get_deck(id: int):
@@ -61,12 +44,18 @@ async def create_card(id: int, card: Card):
 @router.get("/decks", response_model=List[Deck], tags=["decks"])
 async def get_decks():
     """Get all decks"""
-    statement = select(Deck)
-    res = session.exec(statement).all()
-    return res
+    deck_statement = select(Deck)
+    deck_res = session.exec(deck_statement).all()
+    card_statement = select(Card)
+    card_res = session.exec(card_statement).all()
+    for card in card_res:
+        if (datetime.datetime.now() - card.last_update).seconds > interval:
+            card.isDone = False
+            session.commit()
+    return deck_res
 
-@router.post("/decks", response_model=Deck, status_code=status.HTTP_201_CREATED, tags=["decks"]) 
-async def create_deck(deck: Deck):
+@router.post("/decks", response_model=Deck, tags=["decks"])
+async def create_deck(deck: Deck) -> Deck:
     """Create a deck"""
     new_deck = Deck(name=deck.name)
     if new_deck.name == "":

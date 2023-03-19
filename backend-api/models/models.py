@@ -8,10 +8,10 @@ class Card(SQLModel, table=True):
     id: Optional[int] = Field(primary_key=True)
     frontside: str
     backside: str
-    rating: int = Field(default=3)
+    global_rating: int = Field(default=0)
+    session_rating: int = Field(default=3)
     deck_id: int = Field(foreign_key="deck.id")
-    status: str = Field(default="New")
-    is_done: bool = False
+    isDone: bool = False
     created_at: datetime = datetime.now()
     last_update: datetime = datetime.now()
     deck: Optional["Deck"] = Relationship(back_populates="cards")
@@ -30,6 +30,8 @@ class Deck(SQLModel, table=True):
 
 class DeckDelete(SQLModel):
     id: Optional[int] = Field(primary_key=True)
+
+
 
 
 class User(SQLModel, table=True):

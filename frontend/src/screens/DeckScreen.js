@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { cardsOfDeckAction, createCardAction } from "../actions/cardActions";
 import { deckDetails, deckDeleteAction } from "../actions/deckActions";
+import { cardStatusAction } from "../actions/learningActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
@@ -13,17 +14,24 @@ export default function DeckScreen() {
   const [frontside, setFrontside] = useState("");
   const [backside, setBackside] = useState("");
   const [showCards, setShowCards] = useState(false)
-  const oneDeck = useSelector((state) => state.oneDeck);
-  const cardsOfDeck = useSelector((state) => state.cardsOfDeck);
+  const [done, setDone] = useState(false)
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const oneDeck = useSelector((state) => state.oneDeck);
+  const cardsOfDeck = useSelector((state) => state.cardsOfDeck);
+  const cardStatus = useSelector((state) => state.cardStatus)
+  const {statusLoading, statusError, status} = cardStatus
   const { loading, error, deck } = oneDeck;
   const { cardsLoading, cardsError, cards } = cardsOfDeck;
 
   useEffect(() => {
     dispatch(deckDetails(id));
     dispatch(cardsOfDeckAction(id));
+    dispatch(cardStatusAction(id))
   }, [dispatch]);
+
 
   const handleShowModal = () => setAddModal(true);
   const handleCloseModal = () => setAddModal(false);
@@ -59,8 +67,11 @@ export default function DeckScreen() {
     :
     setShowCards(true)
   }
+
+
   return (
     <div>
+      {!done ?
       <div className="d-flex flex-column my-3">
         <div className="mx-auto">
         <Link to="learn">
@@ -85,6 +96,11 @@ export default function DeckScreen() {
       </div>
         <div className="mx-auto">
         <h1>{deck?.name}</h1>
+        <div className="d-inline-flex">
+            <p className="text-success">New: {status?.["statusNew"] ? status["statusNew"] : 0} </p>
+            <p className="mx-2 text-warning">Learning: {status?.["statusLearn"] ? status["statusLearn"] : 0}</p>
+            <p className="text-danger">Repeat: {status?.["statusRepeat"] ? status["statusRepeat"] : 0}</p>
+        </div>
         </div>
       <div className="d-flex justify-content-center mt-4">
       <Button onClick={showCardsHandler} variant="info" className="mb-3 rounded">{showCards ? "Hide Cards" : "Show cards"}</Button>
@@ -98,6 +114,7 @@ export default function DeckScreen() {
             <th>Frontside</th>
             <th>Created</th>
             <th>Edit</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -118,6 +135,7 @@ export default function DeckScreen() {
                     <i className="fas fa-trash"></i>
                   </Button>
                 </td>
+                <td>{card?.status}</td>
               </tr>
             );
           }) : <h1>No cards...</h1>}
@@ -169,6 +187,8 @@ export default function DeckScreen() {
         </Modal.Footer>
       </Modal>
     </div>
+    : <h1>Thast all for today!</h1>
+}
     </div>
   );
 }

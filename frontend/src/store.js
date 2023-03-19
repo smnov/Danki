@@ -8,8 +8,8 @@ import {
   deckListReducer,
   deckReducer,
 } from "./reducers/deckReducers";
-import { cardsOfDeckReducer, createCartReducer, oneCardReducer } from "./reducers/cardReducers";
-import { cardLearnReducer } from "./reducers/learningReducers";
+import { cardsOfDeckReducer, cardStatusReducer, createCartReducer, oneCardReducer } from "./reducers/cardReducers";
+import { cardLearnReducer, decreaseCardReducer, increaseCardReducer } from "./reducers/learningReducers";
 
 const reducer = combineReducers({
   deckList: deckListReducer,
@@ -20,6 +20,9 @@ const reducer = combineReducers({
   oneCard: oneCardReducer,
   createCard: createCartReducer,
   cardLearn: cardLearnReducer,
+  increaseCard: increaseCardReducer,
+  decreaseCard: decreaseCardReducer,
+  cardStatus: cardStatusReducer,
 });
 
 const middleware = [thunk];

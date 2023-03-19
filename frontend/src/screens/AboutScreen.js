@@ -1,7 +1,8 @@
 export default function AboutScreen() {
   return (
-    <div>
-      <h1>About</h1>
+    <div className="d-flex-column justify-content-center">
+      <h1 className="">About</h1>
+      <p>What is Donkey?</p>
     </div>
   );
 }
