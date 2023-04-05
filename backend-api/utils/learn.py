@@ -9,4 +9,3 @@ def check_rating(card):
         card.global_rating += 1
     card.last_update = datetime.datetime.now()
     return card 
-

@@ -29,7 +29,7 @@ export default function HomeScreen() {
             </tr>
           </thead>
           <tbody>
-            {decks?.map((deck) => {
+            {decks ? decks.map((deck) => {
               return (
                 <tr key={deck.id}>
                   <td>{deck.id}</td>
@@ -39,7 +39,10 @@ export default function HomeScreen() {
                   <td>{deck.created_at.slice(0, 10)}</td>
                 </tr>
               );
-            })}
+            })
+          : (
+            <p>No decks</p>
+          )}
           </tbody>
         </Table>
       </div>

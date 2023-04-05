@@ -11,6 +11,7 @@ from config import interval
 router = APIRouter()
 session = Session(bind=engine)
 
+
 @router.get("/decks/{id}/cards", response_model=List[Card], tags=["cards"])
 async def get_cards_of_deck(id: int):
     """Get cards of a deck by the deck id"""
@@ -18,6 +19,10 @@ async def get_cards_of_deck(id: int):
     res = session.exec(statement).all()
     if not res:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    for card in res:
+        if card.isDone == True and (datetime.datetime.now() - card.last_update).seconds > interval:
+            card.isDone = False    
+    session.commit()
     return res
 
 
@@ -65,14 +70,6 @@ async def create_deck(deck: Deck) -> Deck:
     return new_deck
 
 
-@router.get("/delete/card/{id}", response_model=List[Card],tags=['cards'])
-async def delete_card(id: int):
-    cards_found = select(Card).where(Card.deck_id == id)
-    res = session.exec(cards_found).all()
-    if res != None:
-        session.delete(res)
-        session.commit()
-
 @router.delete("/delete/{id}", tags=["decks"])
 async def delete_deck(id: int):
     """Delete the deck and all it's cards"""
@@ -83,7 +80,6 @@ async def delete_deck(id: int):
     res = session.exec(card_found).all()
     if res != None:  
         for card in res:
-            print(card)
             session.delete(card)
             session.commit()
     session.delete(deck)

@@ -1,10 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap"
 import Card from "react-bootstrap/Card"
 import { useDispatch, useSelector } from "react-redux";
 import ReactCardFlip from "react-card-flip"
 import { useEffect, useState } from "react";
-import { cardOfDeck, oneCardAction } from "../actions/cardActions";
+import { cardOfDeck, deleteCardAction, oneCardAction } from "../actions/cardActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
@@ -14,6 +14,7 @@ export default function CardScreen() {
   const oneCard = useSelector((state) => state.oneCard)
   const {loading, error, card } = oneCard
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(oneCardAction(card_id))
@@ -21,7 +22,8 @@ export default function CardScreen() {
 
   const deleteHandler = (e) => {
     e?.preventDefault();
-
+    dispatch(deleteCardAction(card_id))
+    navigate(-1)
   }
 
 

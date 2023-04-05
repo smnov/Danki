@@ -5,6 +5,8 @@ from models.models import Card, CardPatch
 from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
 from utils.learn import check_rating
+from config import interval
+import datetime
 import random
 
 
@@ -19,6 +21,10 @@ async def learn_the_deck(id: int):
     if not res:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     card = random.choice(res)
+    print(card)
+    if card.global_rating >= 5:
+        card.session_rating = 2
+    session.commit()
     return card
 
 
@@ -46,3 +52,4 @@ async def change_rating(id: int, rating: int):
     check_rating(res)
     session.commit()
     return res
+

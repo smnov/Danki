@@ -10,6 +10,10 @@ import {
   CARD_GET_ONE_REQUEST,
   CARD_GET_ONE_SUCCESS,
   CARD_GET_ONE_FAIL,
+  CARD_DECREASE_REQUEST,
+  CARD_DELETE_FAIL,
+  CARD_DELETE_SUCCESS,
+  CARD_DELETE_REQUEST,
 } from "../constants/constants";
 
 export const cardsOfDeckAction = (id) => async (dispatch) => {
@@ -52,6 +56,22 @@ export const oneCardAction = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: CARD_GET_ONE_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.detail,
+    });
+  }
+}
+
+export const deleteCardAction = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: CARD_DELETE_REQUEST})
+    const {data} = await axios.delete(localhost + `cards/${id}`)
+    dispatch({type: CARD_DELETE_SUCCESS, payload: data})
+  } catch (error) {
+    dispatch({
+      type: CARD_DELETE_FAIL,
       payload:
         error.response && error.response.data.detail
           ? error.response.data.detail

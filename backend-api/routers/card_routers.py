@@ -46,6 +46,15 @@ async def card_status(id: int):
     res2 = session.exec(status_learn).all()
     res3 = session.exec(status_repeat).all()
     return {"statusNew": len(res1), "statusLearn": len(res2), "statusRepeat": len(res3)}
-    
+
+@router.delete("/cards/{id}", tags=["cards"])
+async def delete_card(id: int):
+    """Delete card by id"""
+    card_found = select(Card).where(Card.id == id)
+    res = session.exec(card_found).first()
+    if not res:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    session.delete(res)
+    session.commit()
 
     

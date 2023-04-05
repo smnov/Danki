@@ -27,7 +27,7 @@ export default function AddDeckScreen() {
           className="text-align-center border border-dark p-3"
           controlId="frontside"
         >
-          <Form.Label>Frontside</Form.Label>
+          <Form.Label>New deck</Form.Label>
           <Form.Control
             type="text"
             placeholder="name of new deck"
