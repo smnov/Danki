@@ -15,7 +15,7 @@
         goals. Start using our app today and take your language skills to the
         next level!
         
-        # Installation
+# Installation
 
 ## Backend
 Let's setup our python backend.
